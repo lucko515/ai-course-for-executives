@@ -4,95 +4,26 @@ import webbrowser
 import streamlit as st
 from datetime import datetime
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+
+from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 
+ # Step 4: Create a function to open URLs in a new tab
+
+
 def main():
     st.title("AICourse for Executives")
     st.sidebar.title("Lessons")
-    lesson_m1 = st.sidebar.selectbox("Section 4 lessons", [
-        "Lesson 2: 3 Categories of AI", 
-        "Lesson 3: A.I. vs Machine Learning vs. Deep Learning", 
-        "Lesson 4: How to Use Machine Learning in Your Company",
-        "Lesson 4.1: AI/ML Exercise",
-        "Lesson 5: Machine Learning Foundations",
-        "Lesson 5.1: Customer segmentation example",
-        "Lesson 6: Computer Vision", 
-        "Lesson 7: Natural Language Processing", 
-        "Lesson 8: AI Hardware", 
-        "Lesson 9: AutoML and Transfer Learnign", 
-        "Lesson 10: AI Role in Different Industries", 
-        "Lesson 11: Challenges and Limitations",
-        "Lesson 12: Job Positions"])
+    lesson_m1 = st.sidebar.selectbox("Section 2 exercises", [
+        "Lesson 4.1: AI/ML Exercise", 
+        "Lesson 5.1: Customer segmentation example"])
 
-    lesson_m2 = st.sidebar.selectbox("Section 3 lessons", [
-        "Lesson 2: 3 Categories of AI", 
-        "Lesson 3: A.I. vs Machine Learning vs. Deep Learning", 
-        "Lesson 4: How to Use Machine Learning in Your Company",
-        "Lesson 4.1: AI/ML Exercise",
-        "Lesson 5: Machine Learning Foundations",
-        "Lesson 5.1: Customer segmentation example",
-        "Lesson 6: Computer Vision", 
-        "Lesson 7: Natural Language Processing", 
-        "Lesson 8: AI Hardware", 
-        "Lesson 9: AutoML and Transfer Learnign", 
-        "Lesson 10: AI Role in Different Industries", 
-        "Lesson 11: Challenges and Limitations",
-        "Lesson 12: Job Positions"])
-    
-    if lesson_m1 == "Lesson 2: 3 Categories of AI":
-        st.header("Categories of AI")
-        st.write("In this lesson we talked about 3 different categories of AI. Here you can find links to read more about all examples talked in the lesson :)")
-
-    elif lesson_m1 == "Lesson 3: A.I. vs Machine Learning vs. Deep Learning":
-        st.header("Categories of AI")
-        st.write("Here you can find images, and links regarding AI vs ML vs DL")
-
-        # Step 3: Create a dictionary of resources
-        resources = {
-            "Resource 1": {"name": "Example Website 1", "url": "https://www.example1.com"},
-            "Resource 2": {"name": "Example Website 2", "url": "https://www.example2.com"},
-            "Resource 3": {"name": "Example Website 3", "url": "https://www.example3.com"},
-            # Add more resources here
-        }
-
-        # Step 4: Create a function to open URLs in a new tab
-        def open_url(url):
-            webbrowser.open_new_tab(url)
-
-        # Step 5: Display resources in a structured format
-        for key, value in resources.items():
-            st.subheader(key)
-            st.write(value["name"])
-            if st.button(f"Visit {value['name']}"):
-                open_url(value["url"])
-
-    elif lesson_m1 == "Lesson 4: How to Use Machine Learning in Your Company":
-        st.header("Netflix case-study")
-        st.write("Here you can find images, and links regarding AI vs ML vs DL")
-
-        # Step 3: Create a dictionary of resources
-        resources = {
-            "Resource 1": {"name": "Example Website 1", "url": "https://www.example1.com"},
-            "Resource 2": {"name": "Example Website 2", "url": "https://www.example2.com"},
-            "Resource 3": {"name": "Example Website 3", "url": "https://www.example3.com"},
-            # Add more resources here
-        }
-
-        # Step 4: Create a function to open URLs in a new tab
-        def open_url(url):
-            webbrowser.open_new_tab(url)
-
-        # Step 5: Display resources in a structured format
-        for key, value in resources.items():
-            st.subheader(key)
-            st.write(value["name"])
-            if st.button(f"Visit {value['name']}"):
-                open_url(value["url"])
-
-    elif lesson_m1 == "Lesson 4.1: AI/ML Exercise":
-        st.header("Lesson 1: Web Traffic Analysis")
+    if lesson_m1 == "Lesson 4.1: AI/ML Exercise":
+        st.header("Lesson 4.1: Web Traffic Analysis")
         st.write("In this lesson, you will learn how to analyze web traffic data and predict when to increase your website's bandwidth using machine learning.")
 
         st.subheader("Upload your CSV file")
@@ -151,15 +82,62 @@ def main():
                 st.subheader("Web Traffic Anomalies Visualization")
                 st.pyplot(fig)
 
-        elif lesson_m1 == "Lesson 7: Natural Language Processing":
-        st.header("Lesson 1: Web Traffic Analysis")
-        st.write("In this lesson, you will learn how to analyze web traffic data and predict when to increase your website's bandwidth using machine learning.")
+    elif lesson_m1 == "Lesson 5.1: Customer segmentation example":
+        st.header("Lesson 5.1: Customer segmentation example")
+        st.write("In this lesson, we will use user's data from a shopping mall and cluster them so that we can help marketing team position them in a better way.")
 
-        email_text = st.text_area("Write a simple email here:")
+        st.subheader("Upload your CSV file")
+        file = st.file_uploader("Upload the mall_users.csv (file you downloaded from Kaggle) or donwload from the course materials for this lesson", type=["csv"])
 
-        if st.button("Check for Spam"):
-            result = 1 #classify_email(email_text)
-            st.write(f"Your email is classified as: {result}")
+        if file is not None:
+            data = pd.read_csv(file)
+            st.write("Here's a preview of the data:")
+            st.write(data.head())
+
+            st.subheader("Perform Clustering on Mall Users! ")
+            if st.button("Run Clustering"):
+                customers_data = data.drop('CustomerID', axis=1)
+                # Splitting the data into training and testing sets
+                encode = LabelEncoder()
+                encoded_sex = encode.fit_transform(customers_data['Gender'])
+                customers_data['Gender'] = encoded_sex
+                
+                pca_reducer = PCA(n_components=2)
+                reduced_data = pca_reducer.fit_transform(customers_data)
+                km = KMeans(n_clusters=5)
+                cluster = km.fit(reduced_data)
+
+                # Predicting using the trained model
+                y_pred = km.predict(reduced_data)
+                centroids = km.cluster_centers_
+                plt.figure(figsize=(12, 6))
+                plt.scatter(reduced_data[y_pred == 0, 0], reduced_data[y_pred == 0, 1], c='r', label='Cluster One')
+                plt.scatter(reduced_data[y_pred == 1, 0], reduced_data[y_pred == 1, 1], c='b', label='Cluster two')
+                plt.scatter(reduced_data[y_pred == 2, 0], reduced_data[y_pred == 2, 1], c='g', label='Cluster three')
+                plt.scatter(reduced_data[y_pred == 3, 0], reduced_data[y_pred == 3, 1], c='y', label='Cluster four')
+                plt.scatter(reduced_data[y_pred == 4, 0], reduced_data[y_pred == 4, 1], color='orange', label='Cluster five')
+                plt.scatter(centroids[:, 0], centroids[:, 1], marker='*', s=200, color='black', label='Centroids')
+                plt.title("Custom KMeans results")
+                plt.legend()
+                
+                st.subheader("Segmented customers")
+                st.pyplot(plt)
+
+                st.subheader("Customer segment 1")
+                st.write(data[y_pred==0])
+
+                st.subheader("Customer segment 2")
+                st.write(data[y_pred==1])
+
+                st.subheader("Customer segment 3")
+                st.write(data[y_pred==2])
+
+                st.subheader("Customer segment 4")
+                st.write(data[y_pred==3])
+
+                st.subheader("Customer segment 5")
+                st.write(data[y_pred==4])
+
 
 if __name__ == "__main__":
     main()
