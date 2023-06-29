@@ -16,15 +16,17 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 
 def main():
-    st.title("AICourse for Executives")
-    st.sidebar.title("Lessons")
-    lesson_m1 = st.sidebar.selectbox("Section 2 exercises", [
-        "Lesson 4.1: AI/ML Exercise", 
-        "Lesson 5.1: Customer segmentation example"])
+    
+    lesson_m1 = st.sidebar.selectbox("", [
+        "Section 2 Exercises",
+        "AI/ML Exercise", 
+        "Customer segmentation example"])
 
-    if lesson_m1 == "Lesson 4.1: AI/ML Exercise":
-        st.header("Lesson 4.1: Web Traffic Analysis")
+    if lesson_m1 == "AI/ML Exercise":
+        st.title("Complete AI Course - Section 2 Exercises")
+        st.header("AI/ML Exercise: Web Traffic Analysis")
         st.write("In this lesson, you will learn how to analyze web traffic data and predict when to increase your website's bandwidth using machine learning.")
+        st.write("Before solving this exercise, please make sure to watch the lesson in Section 2 called Exercise on Machine Learning & Netflix")
 
         st.subheader("Upload your CSV file")
         file = st.file_uploader("Upload the web_traffic.csv file provided in the course material for this lesson", type=["csv"])
@@ -82,9 +84,11 @@ def main():
                 st.subheader("Web Traffic Anomalies Visualization")
                 st.pyplot(fig)
 
-    elif lesson_m1 == "Lesson 5.1: Customer segmentation example":
-        st.header("Lesson 5.1: Customer segmentation example")
+    elif lesson_m1 == "Customer segmentation example":
+        st.title("Complete AI Course - Section 2 Exercises")
+        st.header("Customer segmentation example")
         st.write("In this lesson, we will use user's data from a shopping mall and cluster them so that we can help marketing team position them in a better way.")
+        st.write("Before solving this exercise, please make sure to watch the lesson in Section 2 called Exercise on Machine Learning Clustering")
 
         st.subheader("Upload your CSV file")
         file = st.file_uploader("Upload the mall_users.csv (file you downloaded from Kaggle) or donwload from the course materials for this lesson", type=["csv"])
