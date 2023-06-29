@@ -17,6 +17,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 def main():
     
+    st.title("Complete AI Course - Section 2 Exercises")
     lesson_m1 = st.sidebar.selectbox("", [
         "Section 2 Exercises",
         "AI/ML Exercise", 
